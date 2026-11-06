@@ -1,4 +1,9 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>IA con Criterio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -179,6 +184,8 @@ td:first-child{font-weight:700;white-space:nowrap}
 
 </style>
 
+</head>
+<body>
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="#inicio"><span>&lt;/&gt;</span> IA con Criterio</a>
@@ -350,7 +357,14 @@ td:first-child{font-weight:700;white-space:nowrap}
 
     <div class="deck">
       <div class="stage" id="stage" tabindex="0" aria-label="Visor de diapositivas">
-        <img id="slide" src="media/slide-1.jpg" alt="">
+        <div id="frames">
+          <img src="media/slide-1.jpg" alt="Diapositiva 1. Título: Estrategias para reducir el uso excesivo de IA en jóvenes.">
+          <img src="media/slide-2.jpg" alt="Diapositiva 2. La herramienta puede ocupar funciones humanas: resolver, responder, calmar y desdibujar límites." hidden>
+          <img src="media/slide-3.jpg" alt="Diapositiva 3. El malestar psicológico previo predice la dependencia (Huang et al., 2024)." hidden>
+          <img src="media/slide-4.jpg" alt="Diapositiva 4. Tabla que compara el uso automático con el uso consciente de la IA." hidden>
+          <img src="media/slide-5.jpg" alt="Diapositiva 5. Límites visibles, habilidades y acompañamiento: antes, durante y después." hidden>
+          <img src="media/slide-6.jpg" alt="Diapositiva 6. Ampliar, no reemplazar." hidden>
+        </div>
         <div class="ctrl">
           <button class="ib" id="prev" type="button" aria-label="Diapositiva anterior">←</button>
           <span class="cap" id="cap"></span>
@@ -358,7 +372,14 @@ td:first-child{font-weight:700;white-space:nowrap}
           <button class="ib" id="nextS" type="button" aria-label="Diapositiva siguiente">→</button>
         </div>
       </div>
-      <div class="thumbs" id="thumbs" role="list" aria-label="Miniaturas"></div>
+      <div class="thumbs" id="thumbs" role="list" aria-label="Miniaturas">
+        <button type="button" role="listitem" aria-label="Ir a la diapositiva 1: La pregunta"><img src="media/slide-1.jpg" alt=""></button>
+        <button type="button" role="listitem" aria-label="Ir a la diapositiva 2: El desafío"><img src="media/slide-2.jpg" alt=""></button>
+        <button type="button" role="listitem" aria-label="Ir a la diapositiva 3: Hallazgo principal"><img src="media/slide-3.jpg" alt=""></button>
+        <button type="button" role="listitem" aria-label="Ir a la diapositiva 4: Evidencia visual"><img src="media/slide-4.jpg" alt=""></button>
+        <button type="button" role="listitem" aria-label="Ir a la diapositiva 5: La propuesta"><img src="media/slide-5.jpg" alt=""></button>
+        <button type="button" role="listitem" aria-label="Ir a la diapositiva 6: La conclusión"><img src="media/slide-6.jpg" alt=""></button>
+      </div>
     </div>
 
     <div class="actions">
@@ -458,28 +479,16 @@ td:first-child{font-weight:700;white-space:nowrap}
   }
 
   /* Visor de diapositivas */
-  var slides=[
-    {src:'media/slide-1.jpg',t:'La pregunta',alt:'Diapositiva 1. Título: Estrategias para reducir el uso excesivo de IA en jóvenes.'},
-    {src:'media/slide-2.jpg',t:'El desafío',alt:'Diapositiva 2. La herramienta puede ocupar funciones humanas: resolver, responder, calmar y desdibujar límites.'},
-    {src:'media/slide-3.jpg',t:'Hallazgo principal',alt:'Diapositiva 3. El malestar psicológico previo predice la dependencia (Huang et al., 2024).'},
-    {src:'media/slide-4.jpg',t:'Evidencia visual',alt:'Diapositiva 4. Tabla que compara el uso automático con el uso consciente de la IA.'},
-    {src:'media/slide-5.jpg',t:'La propuesta',alt:'Diapositiva 5. Límites visibles, habilidades y acompañamiento: antes, durante y después.'},
-    {src:'media/slide-6.jpg',t:'La conclusión',alt:'Diapositiva 6. Ampliar, no reemplazar.'}
-  ];
-  var i=0, img=document.getElementById('slide'), cap=document.getElementById('cap'),
-      count=document.getElementById('count'), th=document.getElementById('thumbs'), tb=[];
-  slides.forEach(function(s,k){
-    var b=document.createElement('button');b.type='button';b.setAttribute('role','listitem');
-    b.setAttribute('aria-label','Ir a la diapositiva '+(k+1)+': '+s.t);
-    b.innerHTML='<img src="'+s.src+'" alt="" loading="lazy">';
-    b.addEventListener('click',function(){ir(k);});
-    th.appendChild(b);tb.push(b);
-  });
+  var titles=['La pregunta','El desafío','Hallazgo principal','Evidencia visual','La propuesta','La conclusión'];
+  var frames=[].slice.call(document.querySelectorAll('#frames img')),
+      tb=[].slice.call(document.querySelectorAll('#thumbs button')),
+      cap=document.getElementById('cap'), count=document.getElementById('count'), i=0;
+  tb.forEach(function(b,k){b.addEventListener('click',function(){ir(k);});});
   function ir(n){
-    i=(n+slides.length)%slides.length;
-    img.src=slides[i].src;img.alt=slides[i].alt;
-    cap.textContent=slides[i].t;
-    count.textContent=(i+1)+' / '+slides.length;
+    i=(n+frames.length)%frames.length;
+    frames.forEach(function(f,k){f.hidden=(k!==i);});
+    cap.textContent=titles[i];
+    count.textContent=(i+1)+' / '+frames.length;
     tb.forEach(function(b,k){if(k===i)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');});
   }
   document.getElementById('prev').addEventListener('click',function(){ir(i-1);});
@@ -492,4 +501,5 @@ td:first-child{font-weight:700;white-space:nowrap}
 })();
 </script>
 
-</body></html>
+</body>
+</html>
